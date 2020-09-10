@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,7 +8,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-mongoose.connect("mongodb://localhost:27017/boardinfinityDB", {
+mongoose.connect("mongodb+srv://pundirakash:"+process.env.SECRET+"@cluster0.v6gnn.mongodb.net/boardinfinityDB?retryWrites=true&w=majority", {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true
@@ -46,6 +47,7 @@ app.post('/add', function(req, res) {
   var timeObject = new Date();
   var seconds = timeObject.getSeconds() + req.body.duration;
   timeObject = timeObject + seconds;
+
   const newTask = new Task({
     taskName: req.body.task,
     description: req.body.description,
@@ -66,5 +68,5 @@ app.post('/add', function(req, res) {
 //////////////////////////////////////////////End of Routes//////////////////////////////////////////////////////
 
 app.listen(process.env.PORT || 3000, function() {
-  console.log("Server started on port 3000");
+  console.log("Server started");
 });

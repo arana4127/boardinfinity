@@ -24,14 +24,17 @@ const TodoSchema = new mongoose.Schema({
   duration: Number,
   createdAt: {
     type: Date,
-    expires: 0
+    default:new Date()
+  },
+  expireAt:{
+    type:Date,
+    expires:0
   }
 });
 
-
 const Task = mongoose.model("Task", TodoSchema);
 
-//////////////////////////////////////////Routes////////////////////////////////////////////////////////////////
+//////////////////////////////////////////Routypes////////////////////////////////////////////////////////////////
 app.get('/list', function(req, res) {
   Task.find(function(err, task) {
     if (!err) {
@@ -44,17 +47,18 @@ app.get('/list', function(req, res) {
 
 app.post('/add', function(req, res) {
 
-  var timeObject = new Date();
-  var seconds = timeObject.getSeconds() + req.body.duration;
-  timeObject = timeObject + seconds;
+var dt = new Date();
+dt.setSeconds( dt.getSeconds() + req.body.duration );
 
+//New todo task
   const newTask = new Task({
     taskName: req.body.task,
     description: req.body.description,
     creator: req.body.creator,
     duration: req.body.duration,
-    createdAt: timeObject
+    expireAt:dt
   });
+  console.log(newTask.expireAt);
   newTask.save(function(err) {
     if (!err) {
       res.send("Successfully added a new Task");
